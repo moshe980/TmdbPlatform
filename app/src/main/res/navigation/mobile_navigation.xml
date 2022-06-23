@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.giniapps.tmdbplatform.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_media"
+            app:destination="@id/navigation_media" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_search_media"
+        android:name="com.giniapps.tmdbplatform.ui.searchMedia.SearchMediaFragment"
+        android:label="@string/title_search_media"
+        tools:layout="@layout/fragment_search_media" >
+        <action
+            android:id="@+id/action_navigation_search_media_to_navigation_media"
+            app:destination="@id/navigation_media" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_watch_list"
+        android:name="com.giniapps.tmdbplatform.ui.watchList.WatchListFragment"
+        android:label="@string/title_watch_list"
+        tools:layout="@layout/fragment_watch_list" >
+        <action
+            android:id="@+id/action_navigation_watch_list_to_navigation_media"
+            app:destination="@id/navigation_media" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_media"
+        android:name="com.giniapps.tmdbplatform.ui.media.MediaFragment"
+        android:label="@string/title_media"
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_navigation_media_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_media_to_navigation_search_media"
+            app:destination="@id/navigation_search_media" />
+        <action
+            android:id="@+id/action_navigation_media_to_navigation_watch_list"
+            app:destination="@id/navigation_watch_list" />
+        <argument
+            android:name="media"
+            app:argType="com.giniapps.tmdbplatform.model.response.TmdbItem" />
+    </fragment>
+
+</navigation>
