@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.giniapps.tmdbplatform.databinding.ActivityMainBinding
+import com.giniapps.tmdbplatform.model.response.Person
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +33,17 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        AppManager.personService
+            .createPerson(Person(123, "1.1.2000", null, "fdsijofdsphfipdf", null, null))
+
+
+        println("**********************************")
+        println(AppManager.personService.getAllPersons())
+
+
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

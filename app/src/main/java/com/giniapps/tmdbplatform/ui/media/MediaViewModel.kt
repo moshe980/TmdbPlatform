@@ -45,7 +45,7 @@ class MediaViewModel @Inject constructor() : ViewModel() {
 
     fun getCastsAdapter(): CastsAdapter = adapter
 
-    fun getCredits(mediaItem: TmdbItem) {
+    fun getCasts(mediaItem: TmdbItem) {
         viewModelScope.launch {
             val result = remoteApi.movieCredits(mediaItem.id)
             if (result is Success) {

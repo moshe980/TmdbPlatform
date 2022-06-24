@@ -31,9 +31,3 @@ interface MovieApi {
     suspend fun movieCredit(@Path("movieId") movieId: Int = 1): CreditWrapper
 }
 
-//FACADE (TVSHOWAPI + MOVIEAPI + IMAGEAPI)
-
-//url: https://api.themoviedb.org
-//endpoint:  /3/discover/movie
-// query string www form url encoded
-// ?api_key=b3b1492d3e91e9f9403a2989f3031b0c&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate

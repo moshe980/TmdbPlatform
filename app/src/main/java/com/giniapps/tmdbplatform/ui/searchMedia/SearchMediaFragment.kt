@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.giniapps.tmdbplatform.R
@@ -17,6 +18,8 @@ import com.giniapps.tmdbplatform.model.response.TmdbItem
 import com.giniapps.tmdbplatform.ui.media.MediaFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
@@ -76,7 +79,6 @@ class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
 
-
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (query != null) {
             root.hideKeyboard()
@@ -93,7 +95,7 @@ class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun search(query: String) {
-        val searchQuery = "$query%"
+        val searchQuery = query
         if (binding.chipMovies.isChecked) {
             movieSearchChecked(searchQuery)
         } else if (binding.chipSeries.isChecked) {
@@ -101,10 +103,12 @@ class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
 
         }
     }
+
     fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

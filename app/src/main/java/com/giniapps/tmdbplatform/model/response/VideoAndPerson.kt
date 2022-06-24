@@ -1,35 +1,33 @@
 package com.giniapps.tmdbplatform.model.response
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Person(
+    val id: Int,
     @SerializedName("birthday")
     val birthDay: String?,
     @SerializedName("deathday")
     val deathDay: String?,
-    val id: Int,
-
+    val biography: String,
+    @SerializedName("place_of_birth")
+    val placeOfBirth: String?,
     @SerializedName("also_known_as")
     val alsoKnownAs: List<String>?,
 
-    val biography: String,
-
-    @SerializedName("place_of_birth")
-    val placeOfBirth: String?
-) : Parcelable
+    ) : Parcelable
 
 @Parcelize
 data class Video(
     val id: String,
     val name: String,
     val site: String, //youtube/vimeo/facebook/inst
-
     @SerializedName("key")
     val videoId: String,
-
     val type: String
 
 ) : Parcelable {
@@ -45,7 +43,7 @@ data class Video(
 
         fun getVideoThumbnail(video: Video): String =
             if (video.site.equals(SITE_YOUTUBE, ignoreCase = true))
-                YOUTUBE_THUMBNAIL_URL + video.videoId +".jpg"
+                YOUTUBE_THUMBNAIL_URL + video.videoId + ".jpg"
             else ""
     }
 }

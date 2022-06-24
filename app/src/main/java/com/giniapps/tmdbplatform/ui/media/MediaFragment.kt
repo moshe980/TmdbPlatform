@@ -12,14 +12,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.giniapps.tmdbplatform.R
 import com.giniapps.tmdbplatform.SharedViewmodel
 import com.giniapps.tmdbplatform.databinding.FragmentMediaBinding
 import com.giniapps.tmdbplatform.model.response.TmdbItem
-import com.giniapps.tmdbplatform.ui.searchMedia.MediaInfoAdapter
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +46,7 @@ class MediaFragment : Fragment() {
 
         mediaViewModel.apply {
             getVideo(currentMedia)
-            getCredits(currentMedia)
+            getCasts(currentMedia)
             setMedia(currentMedia)
         }
 
