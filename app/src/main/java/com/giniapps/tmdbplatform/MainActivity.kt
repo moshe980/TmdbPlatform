@@ -34,15 +34,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        AppManager.personService
-            .createPerson(Person(123, "1.1.2000", null, "fdsijofdsphfipdf", null, null))
-
-
-        println("**********************************")
-        println(AppManager.personService.getAllPersons())
-
-
-
 
     }
 

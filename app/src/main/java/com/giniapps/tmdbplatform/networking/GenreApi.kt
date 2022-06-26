@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface GenreApi {
     @GET("3/genre/movie/list?language=en-US")
-    suspend fun genre(): GenreWrapper
+    suspend fun genres(): GenreWrapper
 
 }

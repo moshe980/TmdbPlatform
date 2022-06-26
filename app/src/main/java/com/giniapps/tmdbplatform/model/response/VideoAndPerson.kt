@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Entity(tableName = "PERSONS")
 data class Person(
+    @PrimaryKey
     val id: Int,
     @SerializedName("birthday")
     val birthDay: String?,

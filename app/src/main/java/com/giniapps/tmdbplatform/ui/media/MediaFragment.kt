@@ -26,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MediaFragment : Fragment() {
     private var _binding: FragmentMediaBinding? = null
     private val sharedViewmodel: SharedViewmodel by activityViewModels()
+    private lateinit var mediaViewModel: MediaViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -39,41 +40,58 @@ class MediaFragment : Fragment() {
         val root: View = binding.root
 
         val args: MediaFragmentArgs by navArgs()
-        val currentMedia = args.media
 
-        val mediaViewModel =
-            ViewModelProvider(this)[MediaViewModel::class.java]
+        mediaViewModel = ViewModelProvider(this)[MediaViewModel::class.java]
 
-        mediaViewModel.apply {
-            getVideo(currentMedia)
-            getCasts(currentMedia)
-            setMedia(currentMedia)
+        mediaViewModel.getMovieWithGenres(args.media.id)
+
+
+        mediaViewModel.movieWithGenres.observe(viewLifecycleOwner) {
+            mediaViewModel.apply {
+                getVideo(it.movie)
+                getCasts(it.movie)
+                setMedia(it.movie)
+                setMediaPoster(it.movie)
+
+                binding.collapsingToolBar.title = it.movie.name
+                binding.ratingTV.text = it.movie.voteAverage.toString()
+                binding.descriptionTV.text = it.movie.overview
+                binding.dateTV.text = "Release date: ${it.movie.releaseDate}\n" +
+                        "Genres: ${it.genres.map { it.name }}"
+                mediaViewModel.isFavorite(it.movie)
+
+                binding.favoritToggle.setOnClickListener { view ->
+                    onToggleTapped(view, it.movie)
+                }
+
+
+
+            }
+        }
+        mediaViewModel.isFavorite.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.favoritToggle.isChecked = true
+            }
         }
 
         initCastRecycleView(mediaViewModel)
 
-        setMediaPoster(currentMedia)
 
-        binding.collapsingToolBar.title = currentMedia.name
-        binding.ratingTV.text = currentMedia.voteAverage.toString()
-        binding.descriptionTV.text = currentMedia.overview
-        binding.dateTV.text = "Release date: ${currentMedia.releaseDate}"
 
         lifecycle.addObserver(binding.youtubePlayerView)
 
-        favoritToggle(currentMedia)
 
 
-        binding.favoritToggle.setOnClickListener {
-            onToggleTapped(it, currentMedia)
-        }
+
 
         mediaViewModel.video.observe(viewLifecycleOwner) {
             binding.youtubePlayerView.addYouTubePlayerListener(object :
                 AbstractYouTubePlayerListener() {
                 override fun onReady(youTubePlayer: YouTubePlayer) {
-                    val videoId = it.videos[0].videoId
-                    youTubePlayer.loadVideo(videoId, 0f)
+                    if (it.videos.isNotEmpty()) {
+                        val videoId = it.videos[0].videoId
+                        youTubePlayer.loadVideo(videoId, 0f)
+                    }
                 }
             })
 
@@ -87,11 +105,6 @@ class MediaFragment : Fragment() {
         return root
     }
 
-    private fun favoritToggle(currentMedia: TmdbItem) {
-        if (sharedViewmodel.favoriteList.value?.contains(currentMedia) == true) {
-            binding.favoritToggle.isChecked = true
-        }
-    }
 
     private fun onToggleTapped(
         it: View?,
@@ -99,9 +112,12 @@ class MediaFragment : Fragment() {
     ) {
         with(it as ToggleButton) {
             if (it.isChecked) {
-                sharedViewmodel.addFavorite(currentMedia)
+                //    sharedViewmodel.addFavorite(currentMedia)
+                mediaViewModel.addFavorite(currentMedia)
             } else {
-                sharedViewmodel.removeFavorite(currentMedia)
+                //  sharedViewmodel.removeFavorite(currentMedia)
+                mediaViewModel.removeFavorite(currentMedia)
+
             }
         }
     }

@@ -36,7 +36,8 @@ class WatchListFragment : Fragment() {
         val root: View = binding.root
 
         initRecyclerview(watchListViewModel)
-        sharedViewmodel.favoriteList.value?.let { watchListViewModel.getAdapter().setData(it) }
+
+        watchListViewModel.setData()
 
 
 

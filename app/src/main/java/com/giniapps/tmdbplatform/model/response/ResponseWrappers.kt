@@ -3,19 +3,21 @@ package com.giniapps.tmdbplatform.model.response
 import com.google.gson.annotations.SerializedName
 
 //Movie AND TV SHOW
-class ItemWrapper<T : TmdbItem>(
+data class ItemWrapper<T : TmdbItem>(
     @SerializedName("results")
     val items: List<T>,
-    @SerializedName("page") val page: Int,
-    @SerializedName("total_pages") val pages: Int
+    @SerializedName("page")
+    val page: Int,
+    @SerializedName("total_pages")
+    val pages: Int
 )
 
-class VideoWrapper(
+data class VideoWrapper(
     @SerializedName("results")
     val videos: List<Video>
 )
 
-class CreditWrapper(
+data class CreditWrapper(
     val cast: List<Cast>,
     val crew: List<Crew>
 )

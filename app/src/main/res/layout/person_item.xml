@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100sp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:flow_horizontalGap="5dp"
-    android:layout_height="100sp">
+    android:layout_width="100sp"
+    android:layout_height="100sp"
+    app:cardCornerRadius="100dp"
+    android:layout_marginHorizontal="8dp"
+    app:strokeColor="#BABABA"
+    app:strokeWidth="2dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/personImg"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
 
 
 </com.google.android.material.card.MaterialCardView>

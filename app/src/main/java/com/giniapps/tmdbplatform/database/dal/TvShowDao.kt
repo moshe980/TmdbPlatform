@@ -1,21 +1,44 @@
 package com.giniapps.tmdbplatform.database.dal
 
 import androidx.room.*
-import com.giniapps.tmdbplatform.database.data.TvShowEntity
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.*
 
 @Dao
 interface TvShowDao {
     @Query("SELECT * FROM TV_SHOWS")
-    fun findAllTvShows(): List<TvShowEntity>
+    suspend fun findAllTvShows(): List<TVShow>
+
+    @Query("SELECT * FROM TV_SHOWS  ORDER BY releaseDate DESC")
+    suspend fun findAllTvShowsByLatest(): List<TVShow>
+
+    @Query("SELECT * FROM TV_SHOWS  ORDER BY voteAverage DESC")
+    suspend fun findAllTvShowsByPopularity(): List<TVShow>
+
+    @Query("SELECT * FROM TV_SHOWS WHERE id=:id")
+    suspend fun findTvShowById(id: String): TvShowWithGenres
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveTvShow(tvShow: TVShow)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAllTvShows(tvShows: List<TVShow>)
+
+    @Delete()
+    suspend fun deleteTvShow(tvShow: TVShow)
+
+    @Transaction
+    @Query("SELECT * FROM TV_SHOWS WHERE name LIKE '%' || :tvShowName  || '%' ")
+    suspend fun findAllTvShowsByName(tvShowName: String): List<TvShowWithGenres>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addTvShowGenreCrossRef(tvShowWithGenreCrossRef: TvShowWithGenreCrossRef)
 
     @Transaction
     @Query("SELECT * FROM TV_SHOWS WHERE id=:id")
-    fun findTvShowById(id: String): TvShowEntity
+    suspend fun findTvShowWithGenresById(id: String): TvShowWithGenres
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveTvShow(tvShowEntity: TvShowEntity)
+    @Transaction
+    @Query("SELECT * FROM MOVIES")
+    suspend fun findAllTvShowsWithGenres(): List<TvShowWithGenres>
 
-    @Delete()
-    fun deleteTvShow(tvShowEntity: TvShowEntity)
 }

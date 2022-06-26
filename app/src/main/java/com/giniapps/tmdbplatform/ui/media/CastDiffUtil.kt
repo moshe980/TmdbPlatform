@@ -19,12 +19,12 @@ class CastDiffUtil @Inject constructor(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
+        return oldList[oldItemPosition].creditId == newList[newItemPosition].creditId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return when {
-            oldList[oldItemPosition].id != newList[newItemPosition].id -> {
+            oldList[oldItemPosition].creditId != newList[newItemPosition].creditId -> {
                 false
             }
             oldList[oldItemPosition].name != newList[newItemPosition].name -> {

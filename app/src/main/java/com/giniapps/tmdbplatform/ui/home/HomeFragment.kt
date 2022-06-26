@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
         
         initRecyclerview(homeViewModel)
 
-        homeViewModel.getMoviesFromApi()
+        homeViewModel.getMovies()
 
         return root
     }

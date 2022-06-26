@@ -1,15 +1,15 @@
 package com.giniapps.tmdbplatform.di
 
-import androidx.viewbinding.BuildConfig
 import com.giniapps.tmdbplatform.BuildConfig.TMDB_API_KEY
 import com.giniapps.tmdbplatform.BuildConfig.TMDB_BASE_URL
+import com.giniapps.tmdbplatform.networking.GenreApi
+import com.giniapps.tmdbplatform.networking.MovieApi
+import com.giniapps.tmdbplatform.networking.PersonApi
+import com.giniapps.tmdbplatform.networking.TVShowApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.giniapps.tmdbplatform.networking.MovieApi
-import com.giniapps.tmdbplatform.networking.PersonApi
-import com.giniapps.tmdbplatform.networking.TVShowApi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -77,5 +77,9 @@ class NetworkingModule {
 
     @Provides
     fun providePersonService(retrofit: Retrofit): PersonApi = retrofit.create(PersonApi::class.java)
+
+    @Provides
+    fun provideGenreService(retrofit: Retrofit): GenreApi = retrofit.create(GenreApi::class.java)
+
 
 }

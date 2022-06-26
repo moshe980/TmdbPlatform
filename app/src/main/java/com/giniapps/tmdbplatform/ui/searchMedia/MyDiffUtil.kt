@@ -1,6 +1,8 @@
 package com.giniapps.tmdbplatform.ui.searchMedia
 
 import androidx.recyclerview.widget.DiffUtil
+import com.giniapps.tmdbplatform.model.response.Movie
+import com.giniapps.tmdbplatform.model.response.MovieWithGenres
 import com.giniapps.tmdbplatform.model.response.TmdbItem
 import javax.inject.Inject
 

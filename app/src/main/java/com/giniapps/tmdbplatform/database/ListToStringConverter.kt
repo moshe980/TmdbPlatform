@@ -1,4 +1,4 @@
-package com.giniapps.tmdbplatform.database.data
+package com.giniapps.tmdbplatform.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
@@ -16,7 +16,7 @@ class ListToStringConverter {
     @TypeConverter
     fun convertToEntityAttribute(listOfString: String): List<String> {
         // unmarshalling
-        val listType: Type = object : TypeToken<ArrayList<String>>() {}.type
+        val listType: Type = object : TypeToken<List<String>>() {}.type
         return Gson().fromJson(listOfString, listType)
     }
 

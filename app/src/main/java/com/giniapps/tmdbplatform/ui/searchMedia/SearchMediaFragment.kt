@@ -62,12 +62,12 @@ class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
         findNavController().navigate(R.id.navigation_media, MediaFragmentArgs(item).toBundle())
     }
 
-    private fun tvShowsSearchChecked(query: String) {
-        searchMediaViewModel.getSeriesFromApi(query)
-    }
+  /*  private fun tvShowsSearchChecked(query: String) {
+        searchMediaViewModel.getSeries(query)
+    }*/
 
     private fun movieSearchChecked(query: String) {
-        searchMediaViewModel.getMoviesFromApi(query)
+        searchMediaViewModel.getMovies(query)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -99,7 +99,7 @@ class SearchMediaFragment : Fragment(), SearchView.OnQueryTextListener {
         if (binding.chipMovies.isChecked) {
             movieSearchChecked(searchQuery)
         } else if (binding.chipSeries.isChecked) {
-            tvShowsSearchChecked(searchQuery)
+         //   tvShowsSearchChecked(searchQuery)
 
         }
     }

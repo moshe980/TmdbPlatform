@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.giniapps.tmdbplatform.R
+import com.giniapps.tmdbplatform.model.response.MovieWithGenres
 import com.giniapps.tmdbplatform.model.response.TmdbItem
 import com.giniapps.tmdbplatform.ui.searchMedia.MyDiffUtil
 import javax.inject.Inject
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
     @Inject
     lateinit var diffutil: MyDiffUtil
+
 
     private var list = emptyList<TmdbItem>()
     lateinit var onChildItemClickListener: OnChildItemClickListener
@@ -39,7 +41,7 @@ class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.Vie
     }
 
 
-    fun getItem(position: Int): TmdbItem = list[position]
+    fun getItem(position: Int): TmdbItem = list[position%list.size]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater =
@@ -48,15 +50,16 @@ class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.Vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val newPosition=position%list.size
         Glide.with(holder.imageView)
-            .load(Uri.parse(list[position].getImageUrl()))
+            .load(Uri.parse(list[newPosition].getImageUrl()))
             .fitCenter()
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(holder.imageView)
 
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = Int.MAX_VALUE
 
     fun setData(newMediaList: List<TmdbItem>) {
         diffutil = MyDiffUtil(list, newMediaList)
