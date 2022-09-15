@@ -1,5 +1,5 @@
-# TmdbPlatform
-##Android application that provide information on popular, top rated, upcoming movies and tv shows with an option of saving ones favourite movies/tv show in a wishlist..
+# Tmdb Platform App
+Android application that provide information on popular, top rated, upcoming movies and tv shows with an option of saving ones favourite movies/tv show in a wishlist..
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/57193257/190469783-5da6ae61-1a2c-4dfb-9f97-02051bb3e39c.png)
