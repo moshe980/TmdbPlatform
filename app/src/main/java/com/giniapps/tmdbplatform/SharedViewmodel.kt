@@ -1,23 +1,23 @@
 package com.giniapps.tmdbplatform
 
+import android.graphics.Movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.giniapps.tmdbplatform.model.response.TmdbItem
 
 
 class SharedViewmodel : ViewModel() {
-    private var _favoriteList = MutableLiveData<MutableList<TmdbItem>>()
-    val favoriteList: LiveData<MutableList<TmdbItem>> get() = _favoriteList
+    private var _favoriteList = MutableLiveData<MutableList<Movie>>()
+    val favoriteList: LiveData<MutableList<Movie>> get() = _favoriteList
     init {
-        _favoriteList.value= mutableListOf<TmdbItem>()
+        _favoriteList.value= mutableListOf<Movie>()
     }
 
-    fun addFavorite(newMedia: TmdbItem) {
+    fun addFavorite(newMedia: Movie) {
         _favoriteList.value?.add(newMedia)
     }
 
-    fun removeFavorite(newMedia: TmdbItem) {
+    fun removeFavorite(newMedia: Movie) {
         _favoriteList.value?.remove(newMedia)
     }
 }

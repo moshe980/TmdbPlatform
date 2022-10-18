@@ -10,18 +10,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WatchListViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var mediaInfoAdapter: MediaInfoAdapter
 
     @Inject
     lateinit var repository: TmdbRepositoryLogic
 
 
-    fun getAdapter(): MediaInfoAdapter = mediaInfoAdapter
+   // fun getAdapter(): MediaInfoAdapter = mediaInfoAdapter
     fun setData() {
         viewModelScope.launch {
 
-            mediaInfoAdapter.setData(repository.getWatchList().map { it.item })
+        //    mediaInfoAdapter=MediaInfoAdapter(repository.getWatchList().map { it.item })
 
         }
     }

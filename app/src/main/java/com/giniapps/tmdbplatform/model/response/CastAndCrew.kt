@@ -32,7 +32,7 @@ data class Cast(
     override val creditId: Int
 ) : Credit {
     override fun getImageUrl() =
-        TmdbItem.TMDB_IMAGE_URL + profilePath
+        Media.TMDB_IMAGE_URL + profilePath
 }
 
 @Parcelize
@@ -45,6 +45,6 @@ data class Crew(
     override val creditId: String
 ) : Credit{
     override fun getImageUrl() =
-        TmdbItem.TMDB_IMAGE_URL + profilePath
+        Media.TMDB_IMAGE_URL + profilePath
 
 }

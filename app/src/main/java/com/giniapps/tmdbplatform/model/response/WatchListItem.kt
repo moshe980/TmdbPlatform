@@ -10,5 +10,5 @@ data class WatchListItem(
     @PrimaryKey
     val watchListId: Long,
     @Embedded
-    val item:Movie
+    val item:Media
 )

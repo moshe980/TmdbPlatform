@@ -1,13 +1,17 @@
 package com.giniapps.tmdbplatform.repository
 
 import android.content.SharedPreferences
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
+import com.giniapps.tmdbplatform.MediaCategoryEnum
 import com.giniapps.tmdbplatform.database.logic.TmdbDataSource
 import com.giniapps.tmdbplatform.model.response.*
 import com.giniapps.tmdbplatform.networking.RemoteApi
-import java.util.*
+import com.giniapps.tmdbplatform.ui.searchMedia.MediaPagingSource
 import javax.inject.Inject
 
-class TmdbRepositoryLogic @Inject constructor() :TmdbRepository{
+class TmdbRepositoryLogic @Inject constructor() : TmdbRepository {
     @Inject
     lateinit var dataSource: TmdbDataSource
 
@@ -16,17 +20,20 @@ class TmdbRepositoryLogic @Inject constructor() :TmdbRepository{
 
     @Inject
     lateinit var sp: SharedPreferences
+
     private val spName = "last_update"
 
 
-    private suspend fun getPopularMoviesFromApi() {
-        val currentDate = System.currentTimeMillis()
-        sp.edit().putLong(spName, currentDate).apply()
-        val categoryId = "0"
+    private suspend fun getMediaByCategory(
+        categoryId: String,
+        categoryName: String,
+        block: suspend () -> Result<ItemWrapper<Media>>
+    ) {
 
-        dataSource.createCategory(Category(categoryId, "Popular Movies"))
+        dataSource.createCategory(Category(categoryId, categoryName))
 
-        val moviesResult = remoteApi.popularMovies(1)
+        val moviesResult = block()
+
         val genresResult = remoteApi.getGenres()
         // val tvShowsResult = remoteApi.allTvShows(1)
 
@@ -58,104 +65,18 @@ class TmdbRepositoryLogic @Inject constructor() :TmdbRepository{
             // return exc()
 
         }
-
-
     }
 
-    private suspend fun getLatestMoviesFromApi() {
-        val currentDate = System.currentTimeMillis()
-        sp.edit().putLong(spName, currentDate).apply()
-        val categoryId = "1"
-
-        dataSource.createCategory(Category(categoryId, "Latest Movies"))
-
-        val moviesResult = remoteApi.latestMovies(1)
-        val genresResult = remoteApi.getGenres()
-        // val tvShowsResult = remoteApi.allTvShows(1)
-
-        if (moviesResult is Success && genresResult is Success) {
-            val movies = moviesResult.data.items
-            val genres = genresResult.data.genres
-
-            dataSource.createAllMovies(movies)
-            dataSource.createAllGenres(genres)
-
-            movies.forEach { movie ->
-                dataSource.createCategoryWithMoviesCrossRef(
-                    CategoryWithMoviesCrossRef(
-                        categoryId,
-                        movie.id
-                    )
-                )
-                movie.genreIds.forEach { genreId ->
-                    dataSource.createMovieGenreCrossRef(
-                        MovieWithGenreCrossRef(
-                            movie.id,
-                            genreId.toLong()
-                        )
-                    )
-                }
-            }
-
-        } else {
-            // return exc()
-
-        }
-
-
-    }
-
-    private suspend fun getTopRatedMoviesFromApi() {
-        val currentDate = System.currentTimeMillis()
-        sp.edit().putLong(spName, currentDate).apply()
-        val categoryId = "2"
-
-        dataSource.createCategory(Category(categoryId, "Top rated Movies"))
-
-        val moviesResult = remoteApi.topRatedMovies(1)
-        val genresResult = remoteApi.getGenres()
-
-        if (moviesResult is Success && genresResult is Success) {
-            val movies = moviesResult.data.items
-            val genres = genresResult.data.genres
-
-            dataSource.createAllMovies(movies)
-            dataSource.createAllGenres(genres)
-
-            movies.forEach { movie ->
-                dataSource.createCategoryWithMoviesCrossRef(
-                    CategoryWithMoviesCrossRef(
-                        categoryId,
-                        movie.id
-                    )
-                )
-                movie.genreIds.forEach { genreId ->
-                    dataSource.createMovieGenreCrossRef(
-                        MovieWithGenreCrossRef(
-                            movie.id,
-                            genreId.toLong()
-                        )
-                    )
-                }
-            }
-
-        } else {
-            // return exc()
-
-        }
-
-
-    }
 
     private fun isTimeForFetchFromApi(): Boolean {
         sp.edit().clear().apply()
 
-        val ONE_DAY = 1000L * 60 * 60 * 24
+        val oneDay = 1000L * 60 * 60 * 24
         val now = System.currentTimeMillis()
 
         val lastUpdate = sp.getLong(spName, 0)
 
-        if ((lastUpdate + ONE_DAY * 7) <= now) {
+        if ((lastUpdate + oneDay * 7) <= now) {
             return true
 
         } else if (lastUpdate == 0L) {
@@ -167,42 +88,100 @@ class TmdbRepositoryLogic @Inject constructor() :TmdbRepository{
 
 
     override suspend fun getMoviesByCategory(id: String): CategoryWithMovies {
-        getLatestMoviesFromApi()
-        getTopRatedMoviesFromApi()
-        getPopularMoviesFromApi()
+        getMediaByCategory(
+            "0",
+            MediaCategoryEnum.POPULAR_MOVIES.value
+        ) { remoteApi.popularMovies(1) }
+        getMediaByCategory("1", MediaCategoryEnum.LATEST_MOVIES.value) { remoteApi.latestMovies(1) }
+        getMediaByCategory(
+            "2",
+            MediaCategoryEnum.TOP_RATED_MOVIES.value
+        ) { remoteApi.topRatedMovies(1) }
+
+        getMediaByCategory(
+            "3",
+            MediaCategoryEnum.POPULAR_TV_SHOWS.value
+        ) { remoteApi.popularTVShows(1) }
+        getMediaByCategory(
+            "4",
+            MediaCategoryEnum.LATEST_TV_SHOWS.value
+        ) { remoteApi.latestTVShows(1) }
+        getMediaByCategory(
+            "5",
+            MediaCategoryEnum.TOP_RATED_TV_SHOWS.value
+        ) { remoteApi.topRatedTVShows(1) }
 
         return dataSource.getSpecificCategory(id)
     }
-    override suspend fun getLatestTvShow(): List<TVShow> = dataSource.getAllLatestTvShow()
-    override suspend fun getPopularTvShows(): List<TVShow> = dataSource.getAllPopularTvShow()
-    override suspend fun getMovieWithGenreById(id: String): MovieWithGenres = dataSource.getSpecificMovie(id)
-    override suspend fun getTvShowWithGenreById(id: String): TvShowWithGenres =
-        dataSource.getSpecificTvShow(id)
-    override suspend fun getWatchList(): List<WatchListItem> = dataSource.getAllItems()
-    override suspend fun findAllMoviesByName(movieName: String): List<MovieWithGenres> {
 
-        val searchMovieResult = remoteApi.searchMovies(1, movieName)
+    override suspend fun getMovieWithGenreById(id: String): MovieWithGenres {
+        var c = dataSource.getSpecificMovie(id)
 
-        if (searchMovieResult is Success) {
-            return searchMovieResult.data.items.map {
-                MovieWithGenres(
-                    it,
-                    it.genreIds.map {
-                        Genre(
-                            it.toLong(),
-                            dataSource.getSpecificGenre("$it").name
-                        )
-                    })
-            }
+        if (c != null) {
+            return c
         } else {
-            return dataSource.getAllMoviesByName(movieName)
+            val movieResult = remoteApi.searchMovieById(id)
+            if (movieResult is Success) {
+                val m = movieResult.data
+
+                return MovieWithGenres(m, emptyList())
+            }
+        }
+
+        return c
+
+    }
+
+    override suspend fun getTrailerById(id: Long): VideoWrapper {
+        val movieResult = remoteApi.movieTrailers(id)
+        return if (movieResult is Success) {
+            movieResult.data
+
+        } else {
+            val tvResult = remoteApi.tvShowTrailers(id.toInt())
+            if (tvResult is Success) {
+                tvResult.data
+            } else {
+                VideoWrapper(emptyList())
+            }
+        }
+
+    }
+
+    override suspend fun getCasts(mediaItem: Media): List<Cast> {
+        val result = remoteApi.movieCredits(mediaItem.id)
+        if (result is Success) {
+            return result.data.cast.take(10)
+        } else if (result is Failure) {
+//            _hasServerConnection.value = result.exc?.message
+//            _hasServerConnection.postValue(_hasServerConnection.value)
+            return emptyList()
 
         }
-    }
-    override suspend fun findAllTvShowsByName(tvShowName: String): List<TvShowWithGenres> {
-        return dataSource.getAllTvShowsByName(tvShowName)
+        return emptyList()
 
     }
+
+    override suspend fun createItemWatchList(item: WatchListItem) {
+        dataSource.createItem(item)
+    }
+
+    override suspend fun removeItemWatchList(item: WatchListItem) {
+        dataSource.deleteItem(item)
+    }
+
+    override suspend fun getSpecificItem(currentMedia: Media): WatchListItem {
+        return dataSource.getSpecificItem("${currentMedia.id}")
+
+    }
+
+
+    override suspend fun getWatchList(): List<WatchListItem> = dataSource.getAllItems()
+
+    override fun getSearchResults(movieName: String) =
+        Pager(
+            config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
+            pagingSourceFactory = { MediaPagingSource(remoteApi, movieName) }).liveData
 
 
 }

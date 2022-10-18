@@ -7,5 +7,5 @@ import java.util.*
 data class MediaCategory(
     val id: UUID,
     val name: String,
-    var list: List<TmdbItem>
+    var list: List<Media>
 )

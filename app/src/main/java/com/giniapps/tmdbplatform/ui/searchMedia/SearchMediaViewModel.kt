@@ -1,35 +1,43 @@
 package com.giniapps.tmdbplatform.ui.searchMedia
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.giniapps.tmdbplatform.repository.TmdbRepositoryLogic
+import androidx.lifecycle.*
+import androidx.paging.cachedIn
+import com.giniapps.tmdbplatform.model.response.Media
+import com.giniapps.tmdbplatform.networking.RemoteApi
+import com.giniapps.tmdbplatform.repository.TmdbRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchMediaViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: TmdbRepositoryLogic
+class SearchMediaViewModel @Inject constructor(
+    state: SavedStateHandle,
+) : ViewModel() {
 
     @Inject
-    lateinit var mediaInfoAdapter: MediaInfoAdapter
+    lateinit var repository: TmdbRepository
 
-    private val _hasServerConnection = MutableLiveData<String>()
+    private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
 
-
-    fun getAdapter(): MediaInfoAdapter = mediaInfoAdapter
-
-    fun getMovies(movieName: String) {
-        viewModelScope.launch{
-            mediaInfoAdapter.setData(repository.findAllMoviesByName(movieName).map { it.movie})
-
-        }
+    companion object {
+        private const val CURRENT_QUERY = "current_query"
+        private const val DEFAULT_QUERY = "~~"
     }
 
-   /* fun getSeries(seriesName: String) {
-        mediaInfoAdapter.setData(repository.findAllMoviesByName(seriesName).map { it.movie})
-    }*/
+    val movies = currentQuery.switchMap {
+        repository.getSearchResults(it).cachedIn(viewModelScope)
+    }
+
+    fun searchMovies(query: String) {
+        currentQuery.value = query
+    }
+
+    fun getSeries(seriesName: String) {
+        //   mediaInfoAdapter.setData(repository.findAllMoviesByName(seriesName).map { it.movie })
+        //  mediaInfoAdapter.retry()
+    }
+
 
 }

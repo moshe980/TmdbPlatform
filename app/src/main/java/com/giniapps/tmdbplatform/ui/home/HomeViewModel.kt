@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.giniapps.tmdbplatform.MediaCategoryEnum
 import com.giniapps.tmdbplatform.repository.TmdbRepositoryLogic
 import com.giniapps.tmdbplatform.model.response.MediaCategory
+import com.giniapps.tmdbplatform.repository.TmdbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -16,7 +17,7 @@ class HomeViewModel @Inject constructor(application: Application) : AndroidViewM
     lateinit var categoryAdapter: CategoryAdapter
 
     @Inject
-    lateinit var repository: TmdbRepositoryLogic
+    lateinit var repository: TmdbRepository
 
     fun getMovies() {
         viewModelScope.launch {
@@ -36,16 +37,21 @@ class HomeViewModel @Inject constructor(application: Application) : AndroidViewM
                     MediaCategoryEnum.TOP_RATED_MOVIES.value,
                     repository.getMoviesByCategory("2").movies
                 ),
-            /*    MediaCategory(
+                MediaCategory(
+                    UUID.randomUUID(),
+                    MediaCategoryEnum.POPULAR_TV_SHOWS.value,
+                    repository.getMoviesByCategory("3").movies
+                ),
+                MediaCategory(
                     UUID.randomUUID(),
                     MediaCategoryEnum.LATEST_TV_SHOWS.value,
-                    repository.getLatestTvShow().take(10)
+                    repository.getMoviesByCategory("4").movies
                 ),
                 MediaCategory(
                     UUID.randomUUID(),
                     MediaCategoryEnum.TOP_RATED_TV_SHOWS.value,
-                    repository.getPopularTvShows().take(10)
-                )*/
+                    repository.getMoviesByCategory("5").movies
+                ),
             )
             categoryAdapter.setData(listCategory)
         }

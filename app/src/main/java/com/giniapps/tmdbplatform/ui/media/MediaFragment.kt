@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.giniapps.tmdbplatform.R
 import com.giniapps.tmdbplatform.SharedViewmodel
 import com.giniapps.tmdbplatform.databinding.FragmentMediaBinding
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.Media
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,7 +108,7 @@ class MediaFragment : Fragment() {
 
     private fun onToggleTapped(
         it: View?,
-        currentMedia: TmdbItem
+        currentMedia: Media
     ) {
         with(it as ToggleButton) {
             if (it.isChecked) {
@@ -132,7 +132,7 @@ class MediaFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
-    private fun setMediaPoster(currentMedia: TmdbItem) {
+    private fun setMediaPoster(currentMedia: Media) {
         Glide.with(binding.mediaImageView)
             .load(Uri.parse(currentMedia.getImageUrl()))
             .fitCenter()

@@ -13,7 +13,7 @@ data class CategoryWithMovies(
         associateBy = Junction(CategoryWithMoviesCrossRef::class)
 
     )
-    val movies: List<Movie>
+    val movies: List<Media>
 ) {
 
 }

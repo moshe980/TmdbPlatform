@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.giniapps.tmdbplatform.R
 import com.giniapps.tmdbplatform.SharedViewmodel
 import com.giniapps.tmdbplatform.databinding.FragmentWatchListBinding
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.Media
 import com.giniapps.tmdbplatform.ui.media.MediaFragmentArgs
 import com.giniapps.tmdbplatform.ui.searchMedia.MediaInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,14 +45,14 @@ class WatchListFragment : Fragment() {
     }
 
     private fun initRecyclerview(watchListViewModel: WatchListViewModel) {
-        val adapter = watchListViewModel.mediaInfoAdapter
-        adapter.onItemClickListener = MediaInfoAdapter.OnItemClickListener(::action)
+      //  val adapter = watchListViewModel.mediaInfoAdapter
+      //  adapter.onItemClickListener = MediaInfoAdapter.OnItemClickListener(::action)
         binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(activity)
-        binding.favoritesRecyclerView.adapter = adapter
+      //  binding.favoritesRecyclerView.adapter = adapter
 
     }
 
-    private fun action(item: TmdbItem) {
+    private fun action(item: Media) {
         findNavController().navigate(R.id.navigation_media, MediaFragmentArgs(item).toBundle())
     }
 

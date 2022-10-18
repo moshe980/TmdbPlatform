@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.giniapps.tmdbplatform.R
-import com.giniapps.tmdbplatform.model.response.MovieWithGenres
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.Media
 import com.giniapps.tmdbplatform.ui.searchMedia.MyDiffUtil
 import javax.inject.Inject
 
@@ -19,11 +18,11 @@ class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.Vie
     lateinit var diffutil: MyDiffUtil
 
 
-    private var list = emptyList<TmdbItem>()
+    private var list = emptyList<Media>()
     lateinit var onChildItemClickListener: OnChildItemClickListener
 
     fun interface OnChildItemClickListener {
-        fun childCallback(item: TmdbItem)
+        fun childCallback(item: Media)
     }
 
 
@@ -41,7 +40,7 @@ class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.Vie
     }
 
 
-    fun getItem(position: Int): TmdbItem = list[position%list.size]
+    fun getItem(position: Int): Media = list[position%list.size]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater =
@@ -61,7 +60,7 @@ class MediaAdapter @Inject constructor() : RecyclerView.Adapter<MediaAdapter.Vie
 
     override fun getItemCount(): Int = Int.MAX_VALUE
 
-    fun setData(newMediaList: List<TmdbItem>) {
+    fun setData(newMediaList: List<Media>) {
         diffutil = MyDiffUtil(list, newMediaList)
         val diffResult = DiffUtil.calculateDiff(diffutil)
         list = newMediaList

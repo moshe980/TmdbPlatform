@@ -4,70 +4,118 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.init
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.giniapps.tmdbplatform.R
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.databinding.MediaInfoItemBinding
+import com.giniapps.tmdbplatform.model.response.Media
+import com.giniapps.tmdbplatform.ui.media.CastDiffUtil
 import javax.inject.Inject
 
-class MediaInfoAdapter @Inject constructor() : RecyclerView.Adapter<MediaInfoAdapter.ViewHolder>() {
-    private var mediaList = emptyList<TmdbItem>()
-    lateinit var onItemClickListener: OnItemClickListener
+class MediaInfoAdapter(private val listener: OnItemClickListener) :
+    PagingDataAdapter<Media, MediaInfoAdapter.MediaViewHolder>(MEDIA_COMPARATOR) {
+    private var list = emptyList<Media>()
 
-    fun interface OnItemClickListener {
-        fun callback(item: TmdbItem)
+    lateinit var onItemClickListener: AdapterView.OnItemClickListener
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
+        val binding =
+            MediaInfoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return MediaViewHolder(binding)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.image_info)
-        val mediaNameTV: TextView = itemView.findViewById(R.id.mediaNameTV)
-        val ratingTV: TextView = itemView.findViewById(R.id.ratingTV)
-        val dateTV: TextView = itemView.findViewById(R.id.dateTV)
+    override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        if (currentItem != null) {
+            holder.bind(currentItem)
+        }
+    }
 
+    inner class MediaViewHolder(private val binding: MediaInfoItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener {
-                val item = getItem(adapterPosition)
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = getItem(position)
+                    if (item != null) {
+                        listener.callback(item)
 
-                onItemClickListener.callback(item)
+                    }
+                }
             }
+
+        }
+
+        fun bind(media: Media) {
+            binding.apply {
+                Glide.with(binding.imageInfo)
+                    .load(Uri.parse(media.getImageUrl()))
+                    .fitCenter()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(binding.imageInfo)
+
+                mediaNameTV.text = media.name
+                ratingTV.text = "${media.voteAverage}"
+                dateTV.text =
+                    media.releaseDate?.dropLast(6) ?: media.releaseDate
+            }
+
 
         }
 
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater =
-            LayoutInflater.from(parent.context).inflate(R.layout.media_info_item, parent, false)
-        return ViewHolder(inflater)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(holder.imageView)
-            .load(Uri.parse(mediaList[position].getImageUrl()))
-            .fitCenter()
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .into(holder.imageView)
-
-        holder.mediaNameTV.text = mediaList[position].name
-        holder.ratingTV.text = "${mediaList[position].voteAverage}"
-        holder.dateTV.text =
-            mediaList[position].releaseDate?.dropLast(6) ?: mediaList[position].releaseDate
+    interface OnItemClickListener : AdapterView.OnItemClickListener {
+        fun callback(item: Media)
 
     }
 
-    fun getItem(position: Int): TmdbItem = mediaList[position]
+    companion object {
+        private val MEDIA_COMPARATOR = object : DiffUtil.ItemCallback<Media>() {
+            override fun areItemsTheSame(oldItem: Media, newItem: Media): Boolean =
+                oldItem.id == newItem.id
 
-    override fun getItemCount(): Int = mediaList.size
 
-    fun setData(newMediaList: List<TmdbItem>) {
-        val diffutil = MyDiffUtil(mediaList, newMediaList)
-        val diffResult = DiffUtil.calculateDiff(diffutil)
-        mediaList = newMediaList
-        diffResult.dispatchUpdatesTo(this)
+            override fun areContentsTheSame(oldItem: Media, newItem: Media): Boolean =
+                when {
+                    oldItem.id != newItem.id -> {
+                        false
+                    }
+                    oldItem.name != newItem.name -> {
+                        false
+                    }
+                    oldItem.backdropPath != newItem.backdropPath -> {
+                        false
+                    }
+                    oldItem.overview != newItem.overview -> {
+                        false
+                    }
+                    oldItem.releaseDate != newItem.releaseDate -> {
+                        false
+                    }
+                    oldItem.voteAverage != newItem.voteAverage -> {
+                        false
+                    }
+                    oldItem.posterPath != newItem.posterPath -> {
+                        false
+                    }
+
+                    else -> true
+
+
+                }
+        }
+
     }
 }

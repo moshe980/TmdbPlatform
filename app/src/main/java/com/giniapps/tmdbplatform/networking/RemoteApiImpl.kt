@@ -1,5 +1,6 @@
 package com.giniapps.tmdbplatform.networking
 
+import android.graphics.Movie
 import com.giniapps.tmdbplatform.model.response.*
 import javax.inject.Inject
 
@@ -10,13 +11,13 @@ class RemoteApiImpl @Inject constructor(
     private val genreApi: GenreApi,
 ) : RemoteApi {
 
-    override suspend fun allMovies(page: Int): Result<ItemWrapper<Movie>> = try {
+    override suspend fun allMovies(page: Int): Result<ItemWrapper<Media>> = try {
         Success(movieApi.allMovieItems(page))
     } catch (e: Throwable) {
         Failure(e)
     }
 
-    override suspend fun popularMovies(page: Int): Result<ItemWrapper<Movie>> =
+    override suspend fun popularMovies(page: Int): Result<ItemWrapper<Media>> =
         try {
             Success(movieApi.popularItems(page))
         } catch (e: Throwable) {
@@ -24,13 +25,13 @@ class RemoteApiImpl @Inject constructor(
         }
 
 
-    override suspend fun topRatedMovies(page: Int): Result<ItemWrapper<Movie>> = try {
+    override suspend fun topRatedMovies(page: Int): Result<ItemWrapper<Media>> = try {
         Success(movieApi.topRatedItems(page))
     } catch (e: Throwable) {
         Failure(e)
     }
 
-    override suspend fun latestMovies(page: Int): Result<ItemWrapper<Movie>> = try {
+    override suspend fun latestMovies(page: Int): Result<ItemWrapper<Media>> = try {
         Success(movieApi.latestItems(page))
     } catch (e: Throwable) {
         Failure(e)
@@ -39,7 +40,7 @@ class RemoteApiImpl @Inject constructor(
     override suspend fun searchMovies(
         page: Int,
         query: String
-    ): Result<ItemWrapper<Movie>> = try {
+    ): Result<ItemWrapper<Media>> = try {
         Success(movieApi.searchItems(page, query))
     } catch (e: Throwable) {
         Failure(e)
@@ -58,7 +59,12 @@ class RemoteApiImpl @Inject constructor(
         Failure(e)
     }
 
-    override suspend fun allTvShows(page: Int): Result<ItemWrapper<TVShow>> =try {
+    override suspend fun searchMovieById(id: String): Result<Media> = try {
+        Success(movieApi.searchMovieById(id))
+    } catch (e: Throwable) {
+        Failure(e)
+    }
+    override suspend fun allTvShows(page: Int): Result<ItemWrapper<Media>> =try {
             Success(tvApi.allTvShowItems(page))
         } catch (e: Throwable) {
             Failure(e)
@@ -66,19 +72,19 @@ class RemoteApiImpl @Inject constructor(
 
 
 
-    override suspend fun popularTVShows(page: Int): Result<ItemWrapper<TVShow>> = try {
+    override suspend fun popularTVShows(page: Int): Result<ItemWrapper<Media>> = try {
         Success(tvApi.popularItems(page))
     } catch (e: Throwable) {
         Failure(e)
     }
 
-    override suspend fun topRatedTVShows(page: Int): Result<ItemWrapper<TVShow>> = try {
+    override suspend fun topRatedTVShows(page: Int): Result<ItemWrapper<Media>> = try {
         Success(tvApi.topRatedItems(page))
     } catch (e: Throwable) {
         Failure(e)
     }
 
-    override suspend fun latestTVShows(page: Int): Result<ItemWrapper<TVShow>> = try {
+    override suspend fun latestTVShows(page: Int): Result<ItemWrapper<Media>> = try {
         Success(tvApi.latestItems(page))
     } catch (e: Throwable) {
         Failure(e)
@@ -87,7 +93,7 @@ class RemoteApiImpl @Inject constructor(
     override suspend fun searchTVShows(
         page: Int,
         query: String
-    ): Result<ItemWrapper<TVShow>> =
+    ): Result<ItemWrapper<Media>> =
         try {
             Success(tvApi.searchItems(page, query))
         } catch (e: Throwable) {

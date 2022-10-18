@@ -13,5 +13,5 @@ data class GenreWithTvShow(
         associateBy = Junction(TvShowWithGenreCrossRef::class)
 
     )
-    val movies: List<TVShow>
+    val movies: List<Media>
 )

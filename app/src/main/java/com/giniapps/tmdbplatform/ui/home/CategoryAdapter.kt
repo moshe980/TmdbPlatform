@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.giniapps.tmdbplatform.R
+import com.giniapps.tmdbplatform.model.response.Media
 import com.giniapps.tmdbplatform.model.response.MediaCategory
-import com.giniapps.tmdbplatform.model.response.TmdbItem
 import com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class CategoryAdapter @Inject constructor() : RecyclerView.Adapter<CategoryAdapt
     lateinit var onParentItemClickListener: OnParentItemClickListener
 
     fun interface OnParentItemClickListener {
-        fun parentCallback(item: TmdbItem)
+        fun parentCallback(item: Media)
     }
 
 

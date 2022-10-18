@@ -1,7 +1,6 @@
 package com.giniapps.tmdbplatform.database.dal
 
 import androidx.room.*
-import com.giniapps.tmdbplatform.model.response.Movie
 import com.giniapps.tmdbplatform.model.response.WatchListItem
 
 @Dao

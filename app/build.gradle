@@ -54,6 +54,8 @@ android {
 dependencies {
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+ //   implementation 'androidx.paging:paging-runtime:3.0.0-alpha09'
+    implementation 'androidx.paging:paging-runtime:3.0.0-alpha09'
 
     //retrofit + picasso + okhttp
     def retrofit_version = "2.9.0"

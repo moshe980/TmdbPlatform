@@ -6,7 +6,7 @@ import androidx.room.Relation
 
 data class TvShowWithGenres(
     @Embedded
-    val tvShow: TVShow,
+    val tvShow: Media,
 
     @Relation(
         parentColumn = "id",

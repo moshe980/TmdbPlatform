@@ -2,18 +2,15 @@ package com.giniapps.tmdbplatform.ui.home
 
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giniapps.tmdbplatform.R
 import com.giniapps.tmdbplatform.SharedViewmodel
 import com.giniapps.tmdbplatform.databinding.FragmentHomeBinding
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.Media
 import com.giniapps.tmdbplatform.ui.media.MediaFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,7 +52,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun action(tmdbItem: TmdbItem) {
+    private fun action(tmdbItem: Media) {
         findNavController().navigate(R.id.navigation_media, MediaFragmentArgs(tmdbItem).toBundle())
     }
 

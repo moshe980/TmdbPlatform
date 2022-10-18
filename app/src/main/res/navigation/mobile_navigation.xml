@@ -50,7 +50,7 @@
             app:destination="@id/navigation_watch_list" />
         <argument
             android:name="media"
-            app:argType="com.giniapps.tmdbplatform.model.response.TmdbItem" />
+            app:argType="com.giniapps.tmdbplatform.model.response.Media" />
     </fragment>
 
 </navigation>

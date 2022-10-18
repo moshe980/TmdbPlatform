@@ -24,6 +24,6 @@ class TmdbDataResourceModule {
             .fallbackToDestructiveMigration()
             .build()
 
-        return TmdbDataSourceImpl(db.movieDao(), db.personDao(), db.tvShowDao(), db.genreDao(),db.watchListDao(),db.categoryDao())
+        return TmdbDataSourceImpl(db.movieDao(), db.personDao(), db.genreDao(),db.watchListDao(),db.categoryDao())
     }
 }

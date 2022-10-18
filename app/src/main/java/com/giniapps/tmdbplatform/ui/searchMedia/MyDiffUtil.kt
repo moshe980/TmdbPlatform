@@ -1,12 +1,10 @@
 package com.giniapps.tmdbplatform.ui.searchMedia
 
 import androidx.recyclerview.widget.DiffUtil
-import com.giniapps.tmdbplatform.model.response.Movie
-import com.giniapps.tmdbplatform.model.response.MovieWithGenres
-import com.giniapps.tmdbplatform.model.response.TmdbItem
+import com.giniapps.tmdbplatform.model.response.Media
 import javax.inject.Inject
 
-class MyDiffUtil @Inject constructor(private val oldList: List<TmdbItem>, private val newList: List<TmdbItem>) :
+class MyDiffUtil @Inject constructor(private val oldList: List<Media>, private val newList: List<Media>) :
     DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size

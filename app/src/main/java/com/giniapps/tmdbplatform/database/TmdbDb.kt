@@ -8,8 +8,7 @@ import com.giniapps.tmdbplatform.model.response.*
 
 @Database(
     entities = [
-        Movie::class,
-        TVShow::class,
+        Media::class,
         Person::class,
         MovieWithGenreCrossRef::class,
         Genre::class,
@@ -19,12 +18,11 @@ import com.giniapps.tmdbplatform.model.response.*
         CategoryWithMoviesCrossRef::class,
 
     ],
-    version = 2
+    version = 2, exportSchema = false
 )
 @TypeConverters(SetToStringConverter::class, ListToStringConverter::class)
 abstract class TmdbDb : RoomDatabase() {
-    abstract fun movieDao(): MovieDao
-    abstract fun tvShowDao(): TvShowDao
+    abstract fun movieDao(): MediaDao
     abstract fun personDao(): PersonDao
     abstract fun genreDao(): GenreDao
     abstract fun watchListDao(): WatchListDao

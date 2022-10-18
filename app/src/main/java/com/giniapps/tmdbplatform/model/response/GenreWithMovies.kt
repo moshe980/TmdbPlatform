@@ -13,5 +13,5 @@ data class GenreWithMovies(
         associateBy = Junction(MovieWithGenreCrossRef::class)
 
     )
-    val movies: List<Movie>
+    val movies: List<Media>
 )

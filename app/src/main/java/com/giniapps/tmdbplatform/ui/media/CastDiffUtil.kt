@@ -2,7 +2,6 @@ package com.giniapps.tmdbplatform.ui.media
 
 import androidx.recyclerview.widget.DiffUtil
 import com.giniapps.tmdbplatform.model.response.Cast
-import com.giniapps.tmdbplatform.model.response.TmdbItem
 import javax.inject.Inject
 
 class CastDiffUtil @Inject constructor(
